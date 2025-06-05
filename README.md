@@ -14,7 +14,7 @@ but without forking the cmark-gfm repository.
    You can use the `fetch` command to do this.
 
     ```bash
-    zig fetch --save=libcmark-gfm "https://github.com/abhinav/libcmark-gfm.zig/archive/0.1.0.tar.gz"
+    zig fetch --save=libcmark-gfm "https://github.com/abhinav/libcmark-gfm.zig/archive/0.2.0.tar.gz"
     ```
 
 2. Import the dependency in your build.zig file.
