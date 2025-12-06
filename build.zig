@@ -29,11 +29,14 @@ pub fn build(b: *std.Build) void {
 
     const localIncludes = b.path("include"); // for cmark-gfm_export.h
 
-    const lib = b.addStaticLibrary(.{
+    const lib = b.addLibrary(.{
+        .linkage = .static,
         .name = "cmark-gfm",
-        .target = target,
-        .optimize = optimize,
-        .link_libc = true,
+        .root_module = b.createModule(.{
+            .target = target,
+            .optimize = optimize,
+            .link_libc = true,
+        }),
     });
     b.installArtifact(lib);
     lib.addConfigHeader(config);
@@ -53,11 +56,14 @@ pub fn build(b: *std.Build) void {
         .flags = &.{"-std=c99"},
     });
 
-    const ext_lib = b.addStaticLibrary(.{
+    const ext_lib = b.addLibrary(.{
+        .linkage = .static,
         .name = "cmark-gfm-extensions",
-        .target = target,
-        .optimize = optimize,
-        .link_libc = true,
+        .root_module = b.createModule(.{
+            .target = target,
+            .optimize = optimize,
+            .link_libc = true,
+        }),
     });
     b.installArtifact(ext_lib);
     ext_lib.addConfigHeader(config);
@@ -72,9 +78,11 @@ pub fn build(b: *std.Build) void {
     ext_lib.linkLibrary(lib);
 
     const unit_tests = b.addTest(.{
-        .root_source_file = b.path("src/test.zig"),
-        .target = target,
-        .optimize = optimize,
+        .root_module = b.createModule(.{
+            .root_source_file = b.path("src/test.zig"),
+            .target = target,
+            .optimize = optimize,
+        }),
     });
     unit_tests.root_module.linkLibrary(lib);
     unit_tests.root_module.linkLibrary(ext_lib);
